@@ -1,0 +1,21 @@
+name: Verify F*
+
+on: push
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download F*
+        run: |
+          FSTAR_VERSION=v2025.12.15
+          curl -L -o fstar.tar.gz \
+            "https://github.com/FStarLang/FStar/releases/download/${FSTAR_VERSION}/fstar-${FSTAR_VERSION}-Linux-x86_64.tar.gz"
+          tar xzf fstar.tar.gz
+          echo "FSTAR_HOME=$PWD/fstar" >> "$GITHUB_ENV"
+          echo "$PWD/fstar/bin" >> "$GITHUB_PATH"
+
+      - name: Verify Hello.fst
+        run: fstar.exe Hello.fst
